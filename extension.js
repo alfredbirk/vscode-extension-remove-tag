@@ -45,7 +45,8 @@ function activate(context) {
 		const p2 = editor.document.positionAt(tag.open[1])
 		const p3 = editor.document.positionAt(tag.close[0])
 		const p4 = editor.document.positionAt(tag.close[1])
-
+		
+		console.log('p1:', p1);
 
 
 		const range1 = new vscode.Range(p1,p2);
@@ -67,7 +68,24 @@ function activate(context) {
 				editBuilder.delete(line2.rangeIncludingLineBreak);
 			}
 		})
-	
+
+
+		const p4Modified = new vscode.Position(p4.line - 2, p4.character)
+
+		const offset1 = editor.document.offsetAt(p1);
+		const offset2 = editor.document.offsetAt(p4Modified)
+
+		editor.selection = new vscode.Selection(
+			editor.document.positionAt(offset1),
+			editor.document.positionAt(offset2)
+		);
+
+		vscode.commands.executeCommand("editor.action.formatSelection");
+
+		editor.selection = new vscode.Selection(
+			editor.document.positionAt(offset1),
+			editor.document.positionAt(offset1)
+		);
 
 		// editor.edit(function x(editBuilder) {
 		// 	editBuilder.delete(range1)
